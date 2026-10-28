@@ -85,6 +85,10 @@ def main() -> None:
     # settings at import, so set the loaded value rather than the environment.
     if not fastmcp.settings.http_allowed_hosts:
         fastmcp.settings.http_allowed_hosts = [base_host]
+    # TLS ends at the edge, so the app sees http:// and the same-origin fallback
+    # refuses the browser's https:// Origin on the OAuth consent form (403).
+    if not fastmcp.settings.http_allowed_origins:
+        fastmcp.settings.http_allowed_origins = [os.environ["BASE_URL"].rstrip("/")]
 
     create = cli_main.create_mcp_server
 
