@@ -23,6 +23,7 @@ import os
 import sys
 from urllib.parse import urlparse
 
+import fastmcp
 from fastmcp.server.auth.auth import AccessToken
 from fastmcp.server.auth.providers.google import GoogleProvider
 
@@ -80,8 +81,10 @@ def main() -> None:
     auth = build_auth()
     base_host = urlparse(os.environ["BASE_URL"]).hostname or ""
     # The CLI turns on Host validation for HTTP; the public name must be listed
-    # or every request through Railway's edge is answered 421.
-    os.environ.setdefault("FASTMCP_HTTP_ALLOWED_HOSTS", f'["{base_host}"]')
+    # or every request through Railway's edge is answered 421. FastMCP reads its
+    # settings at import, so set the loaded value rather than the environment.
+    if not fastmcp.settings.http_allowed_hosts:
+        fastmcp.settings.http_allowed_hosts = [base_host]
 
     create = cli_main.create_mcp_server
 

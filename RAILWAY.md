@@ -52,8 +52,15 @@ LinkedIn's Cloudflare blocks headless Chromium (verified 2026-10-28, direct and 
 2. In the deploy logs, find the viewer URL
    (`http://127.0.0.1:6080/vnc_lite.html#?path=websockify%3Ftoken%3D...`).
    Replace `http://127.0.0.1:6080` with `https://<service>.up.railway.app`.
+   The token changes on every restart, and the window restarts every 30
+   minutes. If the viewer says "connection closed", read the live token with
+   `railway ssh -- sh -c 'cut -d: -f1 /tmp/linkedin-mcp-viewer-*/tokens'`.
 3. Sign in to LinkedIn in that browser, including 2FA. The process exits once the session is saved.
-4. Delete `LINKEDIN_LOGIN` and `PORT`, then redeploy.
+4. `railway variable delete LINKEDIN_LOGIN`, then `railway variable delete PORT`
+   (each delete redeploys). Finish deleting both before any deploy. A deploy that
+   still boots in login mode moves the new session into `invalid-state-*`; it is
+   put back when that login process ends, so redeploy and check
+   `source-state.json` is back.
 
 While step 1 is live, anyone holding the token URL can drive the login browser.
 Don't share it, and finish quickly.
