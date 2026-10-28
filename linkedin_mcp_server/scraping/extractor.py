@@ -23,6 +23,7 @@ from linkedin_mcp_server.scraping.jobs import JobScraper
 from linkedin_mcp_server.scraping.message_sender import MessageSender
 from linkedin_mcp_server.scraping.navigation import PageNavigator
 from linkedin_mcp_server.scraping.person import PersonScraper
+from linkedin_mcp_server.scraping.post_actions import PostActions
 from linkedin_mcp_server.scraping.posts import PostSearch
 from linkedin_mcp_server.scraping.profile_page import ProfilePageReader
 from linkedin_mcp_server.scraping.session import ScrapingSession
@@ -65,6 +66,7 @@ class LinkedInExtractor:
         job_pages = JobPageReader(session, navigator, content)
         self._jobs = JobScraper(navigator, capture, job_pages)
         self._posts = PostSearch(capture)
+        self._post_actions = PostActions(session, navigator)
         self._conversations = ConversationReader(
             session, navigator, content, profile_page
         )
@@ -219,6 +221,16 @@ class LinkedInExtractor:
             date_posted=date_posted,
             max_pages=max_pages,
         )
+
+    async def comment_on_post(
+        self, post: str, text: str, *, confirm: bool
+    ) -> dict[str, Any]:
+        """Comment on a post with explicit confirmation gating."""
+        return await self._post_actions.comment_on_post(post, text, confirm=confirm)
+
+    async def react_to_post(self, post: str, *, confirm: bool) -> dict[str, Any]:
+        """Like a post with explicit confirmation gating."""
+        return await self._post_actions.react_to_post(post, confirm=confirm)
 
     async def get_inbox(self, limit: int = 20) -> dict[str, Any]:
         """List recent conversations from the messaging inbox."""

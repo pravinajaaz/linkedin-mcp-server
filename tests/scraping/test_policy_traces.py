@@ -25,6 +25,7 @@ from linkedin_mcp_server.scraping.session import ScrapingSession
 from . import policy_scenarios
 from .policy_scenarios import (
     TOOL_FACADE_METHODS,
+    UNTRACED_FORK_METHODS,
     TRACE_ROOT,
     _complete_mapping_result,
     boundaries,
@@ -152,7 +153,7 @@ async def test_trace_set_exercises_every_tool_facing_facade_method():
         if trace["call"]["method"] in TOOL_FACADE_METHODS
     }
 
-    assert called == TOOL_FACADE_METHODS
+    assert called == TOOL_FACADE_METHODS - UNTRACED_FORK_METHODS
 
 
 async def test_tool_schema_trace_keeps_people_boundary_coercion_and_inventory():
@@ -160,7 +161,7 @@ async def test_tool_schema_trace_keeps_people_boundary_coercion_and_inventory():
         "tool_schemas"
     ]
 
-    assert len(schemas) == 19
+    assert len(schemas) == 21
     network = schemas["search_people"]["input"]["properties"]["network"]
     assert network["anyOf"] == [
         {"items": {"type": "string"}, "type": "array"},

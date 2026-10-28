@@ -31,6 +31,7 @@ FACADE_PACKAGE_IMPORTERS = {
 
 PUBLIC_SIGNATURES = {
     "click_button_by_text": "(self, text: 'str', *, scope: 'str' = 'main', timeout: 'int' = 5000) -> 'bool'",
+    "comment_on_post": "(self, post: 'str', text: 'str', *, confirm: 'bool') -> 'dict[str, Any]'",
     "connect_with_person": "(self, username: 'str', *, note: 'str | None' = None) -> 'dict[str, Any]'",
     "extract_feed": "(self, num_posts: 'int' = 10) -> 'ExtractedSection'",
     "extract_page": "(self, url: 'str', section_name: 'str', max_scrolls: 'int | None' = None) -> 'ExtractedSection'",
@@ -41,6 +42,7 @@ PUBLIC_SIGNATURES = {
     "get_page_text": "(self) -> 'str'",
     "get_saved_jobs": "(self, max_pages: 'int' = 3) -> 'dict[str, Any]'",
     "get_sidebar_profiles": "(self, username: 'str') -> 'dict[str, Any]'",
+    "react_to_post": "(self, post: 'str', *, confirm: 'bool') -> 'dict[str, Any]'",
     "scrape_company": "(self, company_name: 'str', requested: 'set[str]', callbacks: 'ProgressCallback | None' = None) -> 'dict[str, Any]'",
     "scrape_job": "(self, job_id: 'str') -> 'dict[str, Any]'",
     "scrape_person": "(self, username: 'str', requested: 'set[str]', callbacks: 'ProgressCallback | None' = None, max_scrolls: 'int | None' = None, *, main_profile_already_loaded: 'bool' = False, allow_self_alias: 'bool' = False) -> 'dict[str, Any]'",
@@ -54,6 +56,7 @@ PUBLIC_SIGNATURES = {
 
 DELEGATES = {
     "click_button_by_text": ("_content", "click_button_by_text"),
+    "comment_on_post": ("_post_actions", "comment_on_post"),
     "connect_with_person": ("_connection", "connect_with_person"),
     "extract_feed": ("_feed", "extract_feed"),
     "extract_page": ("_capture", "extract_page"),
@@ -64,6 +67,7 @@ DELEGATES = {
     "get_page_text": ("_content", "get_page_text"),
     "get_saved_jobs": ("_jobs", "get_saved_jobs"),
     "get_sidebar_profiles": ("_person", "get_sidebar_profiles"),
+    "react_to_post": ("_post_actions", "react_to_post"),
     "scrape_company": ("_company", "scrape_company"),
     "scrape_job": ("_jobs", "scrape_job"),
     "scrape_person": ("_person", "scrape_person"),
@@ -77,6 +81,7 @@ DELEGATES = {
 
 DELEGATE_CALLS = {
     "click_button_by_text": "self._content.click_button_by_text(text, scope=scope, timeout=timeout)",
+    "comment_on_post": "self._post_actions.comment_on_post(post, text, confirm=confirm)",
     "connect_with_person": "self._connection.connect_with_person(username, note=note)",
     "extract_feed": "self._feed.extract_feed(num_posts)",
     "extract_page": "self._capture.extract_page(url, section_name, max_scrolls)",
@@ -87,6 +92,7 @@ DELEGATE_CALLS = {
     "get_page_text": "self._content.get_page_text()",
     "get_saved_jobs": "self._jobs.get_saved_jobs(max_pages)",
     "get_sidebar_profiles": "self._person.get_sidebar_profiles(username)",
+    "react_to_post": "self._post_actions.react_to_post(post, confirm=confirm)",
     "scrape_company": "self._company.scrape_company(company_name, requested, callbacks)",
     "scrape_job": "self._jobs.scrape_job(job_id)",
     "scrape_person": "self._person.scrape_person(username, requested, callbacks, max_scrolls, main_profile_already_loaded=main_profile_already_loaded, allow_self_alias=allow_self_alias)",
@@ -108,6 +114,7 @@ FACADE_STATE = {
     "_jobs",
     "_message_sender",
     "_person",
+    "_post_actions",
     "_posts",
 }
 

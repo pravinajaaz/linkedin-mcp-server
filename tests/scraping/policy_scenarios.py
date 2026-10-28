@@ -1018,6 +1018,7 @@ async def _facade_contract_trace() -> dict[str, Any]:
 
 
 TOOL_FACADE_METHODS = {
+    "comment_on_post",
     "connect_with_person",
     "extract_feed",
     "extract_page",
@@ -1027,6 +1028,7 @@ TOOL_FACADE_METHODS = {
     "get_my_profile",
     "get_saved_jobs",
     "get_sidebar_profiles",
+    "react_to_post",
     "scrape_company",
     "scrape_job",
     "scrape_person",
@@ -1038,6 +1040,9 @@ TOOL_FACADE_METHODS = {
     "send_message",
 }
 COMPATIBILITY_METHODS = {"get_page_text", "click_button_by_text"}
+# Fork-only write actions, covered by tests/scraping/test_post_actions.py
+# rather than by scripted policy traces.
+UNTRACED_FORK_METHODS = {"comment_on_post", "react_to_post"}
 
 
 async def build_policy_traces() -> dict[str, dict[str, Any]]:

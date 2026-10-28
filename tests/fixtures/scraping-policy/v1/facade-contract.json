@@ -16,6 +16,10 @@
         "coroutine": true,
         "signature": "(self, text: 'str', *, scope: 'str' = 'main', timeout: 'int' = 5000) -> 'bool'"
       },
+      "comment_on_post": {
+        "coroutine": true,
+        "signature": "(self, post: 'str', text: 'str', *, confirm: 'bool') -> 'dict[str, Any]'"
+      },
       "connect_with_person": {
         "coroutine": true,
         "signature": "(self, username: 'str', *, note: 'str | None' = None) -> 'dict[str, Any]'"
@@ -56,6 +60,10 @@
         "coroutine": true,
         "signature": "(self, username: 'str') -> 'dict[str, Any]'"
       },
+      "react_to_post": {
+        "coroutine": true,
+        "signature": "(self, post: 'str', *, confirm: 'bool') -> 'dict[str, Any]'"
+      },
       "scrape_company": {
         "coroutine": true,
         "signature": "(self, company_name: 'str', requested: 'set[str]', callbacks: 'ProgressCallback | None' = None) -> 'dict[str, Any]'"
@@ -94,6 +102,7 @@
       }
     },
     "tool_methods": [
+      "comment_on_post",
       "connect_with_person",
       "extract_feed",
       "extract_page",
@@ -103,6 +112,7 @@
       "get_my_profile",
       "get_saved_jobs",
       "get_sidebar_profiles",
+      "react_to_post",
       "scrape_company",
       "scrape_job",
       "scrape_person",
@@ -118,6 +128,35 @@
         "input": {
           "additionalProperties": false,
           "properties": {},
+          "type": "object"
+        },
+        "output": {
+          "additionalProperties": true,
+          "type": "object"
+        }
+      },
+      "comment_on_post": {
+        "input": {
+          "additionalProperties": false,
+          "properties": {
+            "confirm": {
+              "default": false,
+              "description": "Must be True to actually post the comment",
+              "type": "boolean"
+            },
+            "post": {
+              "description": "Post URL (/feed/update/urn:li:activity:... or\n/posts/...-activity-...), post URN, or numeric activity ID",
+              "type": "string"
+            },
+            "text": {
+              "description": "Comment text, up to 1250 characters. Em dashes are refused.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "post",
+            "text"
+          ],
           "type": "object"
         },
         "output": {
@@ -449,6 +488,30 @@
           },
           "required": [
             "linkedin_username"
+          ],
+          "type": "object"
+        },
+        "output": {
+          "additionalProperties": true,
+          "type": "object"
+        }
+      },
+      "react_to_post": {
+        "input": {
+          "additionalProperties": false,
+          "properties": {
+            "confirm": {
+              "default": false,
+              "description": "Must be True to actually like the post",
+              "type": "boolean"
+            },
+            "post": {
+              "description": "Post URL, post URN, or numeric activity ID",
+              "type": "string"
+            }
+          },
+          "required": [
+            "post"
           ],
           "type": "object"
         },

@@ -1,0 +1,7 @@
+
+# -- Railway: fix volume ownership, start the proxy relay, drop to pwuser --
+FROM runtime AS railway
+USER root
+COPY --chmod=755 railway/ /opt/railway/
+ENTRYPOINT ["/opt/railway/start.sh"]
+CMD []
